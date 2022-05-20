@@ -1,7 +1,8 @@
 .DS_Store
 node_modules
 /dist
-
+#local install node by mvn frontend plugin
+/node
 
 # local env files
 .env.local
