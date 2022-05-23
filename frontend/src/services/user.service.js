@@ -4,7 +4,7 @@ export const userService = {
     login,
     logout,
     getCurrentUser
-  };
+};
 
 function login(username, password) {
     return axios.get('/api/user', {
@@ -17,10 +17,10 @@ function login(username, password) {
             console.log('login succesful, storing credentials');
             console.log(response.data);
 
-            localStorage.user = {
+            localStorage.setItem('user', JSON.stringify({
                 username: username,
                 authdata: window.btoa(username + ':' + password)
-            }
+            }));
 
             return true;
         }
@@ -41,5 +41,5 @@ function logout() {
 }
 
 function getCurrentUser() {
-    return localStorage.user;
+    return JSON.parse(localStorage.user);
 }
