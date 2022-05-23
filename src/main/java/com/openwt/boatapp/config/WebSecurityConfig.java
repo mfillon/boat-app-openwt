@@ -18,14 +18,20 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //@formatter:off
         http
-            
             .authorizeRequests()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
             .and()
                 .httpBasic()
                 .authenticationEntryPoint(new NoPopupBasicAuthenticationEntryPoint());
+        // These lines are needed to use h2 console with Spring security
+        // .and();
+        //  .csrf().ignoringAntMatchers("/h2-console/**")
+        // .and()
+        //  .headers().frameOptions().sameOrigin();
+        //@formatter:on
     }
 
     @Autowired
@@ -37,17 +43,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Override default Basic Auth behavior by not sending "WWW-Authentcate" header 
+     * Override default Basic Auth behavior by not sending "WWW-Authentcate" header
      * which would make browser prompt for credentials
      */
     public class NoPopupBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
-        
+                AuthenticationException authException) throws IOException, ServletException {
+
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
         }
-    
+
     }
 }
