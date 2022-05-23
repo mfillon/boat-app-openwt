@@ -5,20 +5,21 @@
             <p>Password: password</p>
         </div>
         <h2>Login</h2>
+        <!-- TODO extract to component TheLoginForm.vue -->
         <form @submit.prevent="login">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" ref="username" name="username" class="form-control" />
+                <input type="text" ref="username" name="username" class="form-control" value="user1" />
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" ref="password" name="password" class="form-control" />
+                <input type="password" ref="password" name="password" class="form-control" value="password" />
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" :disabled="loading">Login</button>
                 <i v-show="loading" class="fa fa-spinner" />
             </div>
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
         </form>
     </div>
 </template>
