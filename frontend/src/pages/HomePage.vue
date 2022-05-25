@@ -8,7 +8,7 @@
                 :id="boat.id"
                 :name="boat.name"
                 :description="boat.description"
-                @boat-deleted="reloadBoats"
+                @boat-modified="reloadBoats"
             ></boat-item>
         </ul>
         <p v-if="!boats.length">No boat!</p>
