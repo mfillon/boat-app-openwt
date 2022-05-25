@@ -12,19 +12,28 @@
             ></boat-item>
         </ul>
         <p v-if="!boats.length">No boat!</p>
+        <button @click="createBoat">New boat!</button>
+        <BoatActionModal v-if="openCreateModal"
+            type="create"
+            @boat-created="reloadBoats"
+            @close="closeCreateModal"
+        ></BoatActionModal>
     </div>
 </template>
 <script>
 
 import BoatItem from '@/components/BoatItem.vue'
 import { boatService } from '@/services/boat.service'
+import BoatActionModal from '@/components/BoatActionModal.vue';
 export default {
     components: {
-        BoatItem
-    },
+    BoatItem,
+    BoatActionModal
+},
     data() {
         return {
-            boats: []
+            boats: [],
+            openCreateModal: false
         }
     },
     created() {
@@ -35,6 +44,12 @@ export default {
             boatService.getAllForCurrentUser().then((boats) => {
                 this.boats = boats
             })
+        },
+        createBoat() {
+            this.openCreateModal = true;
+        },
+        closeCreateModal() {
+            this.openCreateModal = false;
         }
     }
 }
