@@ -1,11 +1,13 @@
 package com.openwt.boatapp.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,7 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openwt.boatapp.model.Boat;
+import com.openwt.boatapp.model.dto.UpdateBoat;
 import com.openwt.boatapp.repository.BoatRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,12 +34,16 @@ public class BoatControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private BoatRepository repo;
 
+    private Boat boat1 = new Boat(1L, "user1", "boat1");
+
     @BeforeEach
     public void setup() {
-        Boat boat1 = new Boat(1L, "user1", "boat1");
         Boat boat2 = new Boat(2L, "user1", "boat2");
         List<Boat> boats = Arrays.asList(boat1, boat2);
         when(repo.findByOwner("user1")).thenReturn(boats);
@@ -91,6 +99,24 @@ public class BoatControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(repo).findById(1L);
+    }
+
+    @Test
+    @WithMockUser("user1")
+    public void edit_boat_should_succeed() throws Exception {
+
+        UpdateBoat updatedBoat = new UpdateBoat("boat1-updated", "New description");
+
+        mvc.perform(put("/api/boats/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedBoat)))
+                .andExpect(status().isNoContent());
+        verify(repo).findById(1L);
+        verify(repo).save(boat1);
+
+        assertThat(boat1)
+            .extracting("name", "description")
+            .contains("boat1-updated", "New description");
     }
 
 }
