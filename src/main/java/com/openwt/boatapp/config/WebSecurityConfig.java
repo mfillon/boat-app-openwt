@@ -2,7 +2,6 @@ package com.openwt.boatapp.config;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -37,22 +36,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        //@formatter:off
         auth.inMemoryAuthentication()
                 .withUser("user1")
                 .password("{noop}password")
+                .roles("USER")
+            .and()
+                .withUser("user2")
+                .password("{noop}password")
                 .roles("USER");
+        //@formatter:on
     }
 
     /**
      * Override default Basic Auth behavior by not sending "WWW-Authentcate" header
      * which would make browser prompt for credentials
      */
-    public class NoPopupBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    public class NoPopupBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
-                AuthenticationException authException) throws IOException, ServletException {
-
+                AuthenticationException authException) throws IOException {
+            // response.addHeader("WWW-Authenticate", "Basic realm=\"" + this.realmName +
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
         }
 
