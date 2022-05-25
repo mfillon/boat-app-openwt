@@ -1,9 +1,10 @@
 <template>
     <li>
-        {{ name }} ({{ description }})
+        {{ name }} ({{ description }}) <button @click="deleteBoat">X</button>
     </li>
 </template>
 <script>
+import { boatService } from '@/services/boat.service'
 
 export default {
 
@@ -12,10 +13,16 @@ export default {
         'name': String,
         'description': String,
     },
-    data() {
-        return {
-
-        };
+    emits: ['boat-deleted'],
+    methods: {
+        deleteBoat() {
+            if(confirm('Are you sure you want to delete this boat?')) {
+                boatService.deleteBoat(this.id).then(() => {
+                    console.log('Boat deleted');
+                    this.$emit('boat-deleted', this.id);
+                })
+            }
+        }
     }
 }
 </script>

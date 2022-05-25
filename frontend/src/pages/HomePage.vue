@@ -8,6 +8,7 @@
                 :id="boat.id"
                 :name="boat.name"
                 :description="boat.description"
+                @boat-deleted="reloadBoats"
             ></boat-item>
         </ul>
         <p v-if="!boats.length">No boat!</p>
@@ -15,8 +16,8 @@
 </template>
 <script>
 
-import { boatService } from '@/services/boat.service'
 import BoatItem from '@/components/BoatItem.vue'
+import { boatService } from '@/services/boat.service'
 export default {
     components: {
         BoatItem
@@ -27,9 +28,14 @@ export default {
         }
     },
     created() {
-        boatService.getAllForCurrentUser().then((boats) => {
-            this.boats = boats
-        })
+        this.reloadBoats();
+    },
+    methods: {
+        reloadBoats() {
+            boatService.getAllForCurrentUser().then((boats) => {
+                this.boats = boats
+            })
+        }
     }
 }
 </script>
