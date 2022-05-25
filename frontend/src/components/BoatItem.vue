@@ -1,6 +1,6 @@
 <template>
     <li>
-        {{ name }} ({{ description }})
+        <a href @click.prevent="showBoatDetails">{{ name }} ({{ description }})</a>
         <button @click="editBoat"><i class="fa fa-edit"></i></button>
         <button @click="deleteBoat"><i class="fa fa-trash"></i></button>
     </li>
@@ -12,10 +12,17 @@
         @close="closeEditModal"
         @boat-updated="$emit('boat-modified')"
     ></BoatActionModal>
+    <BoatDetailsModal v-if="displayBoatDetailsModal"
+        :name="name"
+        :description="description"
+        @close="closeBoatDetailsModal"
+    >
+    </BoatDetailsModal>
 </template>
 <script>
 import { boatService } from '@/services/boat.service'
 import BoatActionModal from '@/components/BoatActionModal.vue'
+import BoatDetailsModal from '@/components/BoatDetailsModal.vue'
 
 export default {
 
@@ -27,10 +34,11 @@ export default {
     emits: ['boat-modified'],
     data() {
         return {
-            openEditModal: false
+            openEditModal: false,
+            displayBoatDetailsModal: false
         }
     },
-    components: { BoatActionModal },
+    components: { BoatActionModal, BoatDetailsModal },
     methods: {
         deleteBoat() {
             if (confirm('Are you sure you want to delete this boat?')) {
@@ -45,6 +53,12 @@ export default {
         },
         closeEditModal() {
             this.openEditModal = false;
+        },
+        showBoatDetails() {
+            this.displayBoatDetailsModal = true;
+        },
+        closeBoatDetailsModal() {
+            this.displayBoatDetailsModal = false;
         }
     }
 }
