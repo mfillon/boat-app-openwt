@@ -4,16 +4,18 @@
         <button @click="editBoat"><i class="fa fa-edit"></i></button>
         <button @click="deleteBoat"><i class="fa fa-trash"></i></button>
     </li>
-    <EditBoatModal v-if="openEditModal" 
+    <BoatActionModal v-if="openEditModal" 
         :id="id"
         :name="name"
         :description="description"
-        @close="closeEditModal" @boat-updated="$emit('boat-modified')"
-    ></EditBoatModal>
+        type="edit"
+        @close="closeEditModal"
+        @boat-updated="$emit('boat-modified')"
+    ></BoatActionModal>
 </template>
 <script>
 import { boatService } from '@/services/boat.service'
-import EditBoatModal from '@/components/EditBoatModal.vue'
+import BoatActionModal from '@/components/BoatActionModal.vue'
 
 export default {
 
@@ -28,7 +30,7 @@ export default {
             openEditModal: false
         }
     },
-    components: { EditBoatModal },
+    components: { BoatActionModal },
     methods: {
         deleteBoat() {
             if (confirm('Are you sure you want to delete this boat?')) {

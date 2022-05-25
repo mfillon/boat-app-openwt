@@ -3,7 +3,7 @@
     <!-- <div @click="$emit('close')"> -->
       <dialog open>
         <header>
-          <h2>Edit boat</h2>
+          <h2>{{ title }}</h2>
         </header>
         <form @submit.prevent="addNewResource">
           <section>
@@ -17,7 +17,7 @@
             </div>
           </section>
           <menu>
-            <button type="submit" @click="updateBoat">Update</button>
+            <button type="submit" @click="triggerAction">{{actionCaption}}</button>
             <button type="button" @click="$emit('close')">Close</button>
           </menu>
         </form>
@@ -30,14 +30,41 @@
 import { boatService } from '@/services/boat.service'
 
 export default {
-  props: ['id', 'name', 'description'],
-  emits: ['close', 'boat-updated'],
+  props: ['id', 'name', 'description', 'type'],
+  emits: ['close', 'boat-updated', 'boat-created'],
   methods: {
+    triggerAction() {
+      if (this.isUpdateAction) {
+        this.updateBoat();
+      } else {
+        this.createBoat();
+      }
+    },
     updateBoat() {
       boatService.editBoat(this.id, this.$refs.name.value, this.$refs.description.value).then(() => {
         this.$emit('boat-updated', this.id);
         this.$emit('close');
       })
+    },
+    createBoat() {
+      boatService.createBoat(this.$refs.name.value, this.$refs.description.value).then(() => {
+        this.$emit('boat-created', this.id);
+        this.$emit('close');
+      })
+    }
+  },
+  computed: {
+    title() {
+      return this.isUpdateAction?'Edit boat':'Create boat';
+    },
+    actionCaption() {
+      return this.isUpdateAction?'Update':'Create';
+    },
+    isUpdateAction() {
+      return this.type === 'edit';
+    },
+    iscreateAction() {
+      return this.type === 'action';
     }
   }
 };

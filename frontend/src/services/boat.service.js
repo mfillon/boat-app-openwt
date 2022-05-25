@@ -4,7 +4,8 @@ import { userService } from '@/services/user.service';
 export const boatService = {
     getAllForCurrentUser,
     deleteBoat,
-    editBoat
+    editBoat,
+    createBoat
 };
 
 function getAllForCurrentUser() {
@@ -31,6 +32,13 @@ function deleteBoat(boatId) {
 
 function editBoat(boatId, name, description) {
     return axios.put('/api/boats/' + boatId, {
+        'name': name,
+        'description': description
+    });
+}
+
+function createBoat(name, description) {
+    return axios.post('/api/boats', {
         'name': name,
         'description': description
     });
