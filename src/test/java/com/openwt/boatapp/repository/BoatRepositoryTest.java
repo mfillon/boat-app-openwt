@@ -19,8 +19,8 @@ public class BoatRepositoryTest {
 
     @BeforeEach
     void setup() {
-        Boat boat1 = new Boat(1L, "Matt", "Titanic");
-        Boat boat2 = new Boat(2L, "John", "La Mouette");
+        Boat boat1 = new Boat(1L, "Matt", "Titanic", null);
+        Boat boat2 = new Boat(2L, "John", "La Mouette", null);
         boatRepo.saveAll(Arrays.asList(boat1, boat2));
     }
 
@@ -39,4 +39,5 @@ public class BoatRepositoryTest {
         Optional<Boat> boat3 = boatRepo.findById(999L);
         assertThat(boat3).isEmpty();
     }
+
 }
