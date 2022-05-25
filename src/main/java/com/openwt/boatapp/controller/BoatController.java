@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -57,4 +59,30 @@ public class BoatController {
         }
         repository.deleteById(boatId);
     }
+
+    @PutMapping("/{boatId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateBoat(@PathVariable long boatId, @RequestBody Boat updatedBoat, Principal principal) {
+
+        //TODO extract validate method for all endpoints
+        Optional<Boat> boat = repository.findById(boatId);
+        if (boat.isEmpty()) {
+            log.debug("Boat with ID #{} not found", boatId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Boat boatToUpdate = boat.get();
+        String owner = boatToUpdate.getOwner();
+        if (!owner.equals(principal.getName())) {
+            log.warn("Boat owner is different than logged in user");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Boat owner is different than logged in user");
+        }
+
+        boatToUpdate.setName(updatedBoat.getName());
+        boatToUpdate.setDescription(updatedBoat.getDescription());
+
+        repository.save(boatToUpdate);
+    }
+
 }
