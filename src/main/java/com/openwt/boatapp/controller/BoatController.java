@@ -4,12 +4,14 @@ import java.security.Principal;
 import java.util.Optional;
 
 import com.openwt.boatapp.model.Boat;
+import com.openwt.boatapp.model.dto.BoatDetails;
 import com.openwt.boatapp.repository.BoatRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,7 +64,7 @@ public class BoatController {
 
     @PutMapping("/{boatId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBoat(@PathVariable long boatId, @RequestBody Boat updatedBoat, Principal principal) {
+    public void updateBoat(@PathVariable long boatId, @RequestBody BoatDetails updatedBoat, Principal principal) {
 
         //TODO extract validate method for all endpoints
         Optional<Boat> boat = repository.findById(boatId);
@@ -83,6 +85,15 @@ public class BoatController {
         boatToUpdate.setDescription(updatedBoat.getDescription());
 
         repository.save(boatToUpdate);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Boat createBoat(@RequestBody BoatDetails newBoatDetails, Principal principal) {
+        Boat newBoat = newBoatDetails.toBoat();
+        newBoat.setOwner(principal.getName());
+        repository.save(newBoat);
+        return newBoat;
     }
 
 }
