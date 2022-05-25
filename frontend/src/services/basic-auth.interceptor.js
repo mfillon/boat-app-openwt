@@ -10,7 +10,7 @@ export default function basicAuthInterceptor() {
         const isApiUrl = request.url.startsWith('/api/');
         if (isLoggedIn && isApiUrl) {
             console.log('Interceptor. adding basic auth data : ', user.authdata)
-            request.headers.common.Authorization = `Baisc ${user.authdata}`;
+            request.headers.common.Authorization = `Basic ${user.authdata}`;
         }
 
         return request;

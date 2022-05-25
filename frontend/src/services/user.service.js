@@ -41,5 +41,5 @@ function logout() {
 }
 
 function getCurrentUser() {
-    return JSON.parse(localStorage.user);
+    return localStorage.user && JSON.parse(localStorage.user);
 }
