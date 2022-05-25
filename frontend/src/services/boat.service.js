@@ -3,7 +3,7 @@ import { userService } from '@/services/user.service';
 
 export const boatService = {
     getAllForCurrentUser,
-    // logout,
+    deleteBoat,
     // getCurrentUser
 };
 
@@ -23,4 +23,8 @@ function getAllForCurrentUser() {
         return Promise.reject(error);
     });
 
+}
+
+function deleteBoat(boatId) {
+    return axios.delete('/api/boats/' + boatId);
 }
