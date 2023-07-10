@@ -21,10 +21,10 @@ Users:
 - user2/password
 
 Exposing endpoints on /api/boats
-- GET /api/boats?owner=...
-- PUT /api/boats/{id}
-- POST //api/boats
-- DELETE /api/boats/{id}
+- GET `/api/boats?owner=...`
+- PUT `/api/boats/{id}`
+- POST `/api/boats`
+- DELETE `/api/boats/{id}`
 
 ## Frontend
 
