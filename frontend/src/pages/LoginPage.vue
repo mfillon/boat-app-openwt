@@ -9,11 +9,11 @@
         <form @submit.prevent="login">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" ref="username" name="username" class="form-control" value="user1" />
+                <input id="username" type="text" ref="username" class="form-control" value="user1" />
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" ref="password" name="password" class="form-control" value="password" />
+                <input id="password" type="password" ref="password" class="form-control" value="password" />
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" :disabled="loading">Login</button>

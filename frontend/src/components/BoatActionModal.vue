@@ -13,7 +13,7 @@
             </div>
             <div>
               <label for="description">Description</label>
-              <textarea id="description" rows="3" ref="description" :value="description"></textarea>
+              <textarea rows="3" ref="description" :value="description"></textarea>
             </div>
           </section>
           <menu>
